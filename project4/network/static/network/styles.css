@@ -1,0 +1,9 @@
+#like {
+    color: grey;
+    cursor: pointer;
+}
+
+.liked {
+    color: red;
+}
+

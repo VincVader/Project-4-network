@@ -1,0 +1,13 @@
+{% extends "network/layout.html" %}
+{% load crispy_forms_tags %}
+{% block body %}
+<div class="row mt-5 mx-auto p-5">
+    <div class="col">
+        <form action="{% url 'new_post' %}" method="POST">
+            {%csrf_token%}
+            {{form.content|as_crispy_field}}
+            <button type="submit" class="btn btn-success">Create New Post</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
