@@ -3,7 +3,6 @@
 {% block body %}
 
 <div class="row m-3">
-
     {%for post in posts%}
     <div class="col-12 m-3 border">
         <div class="row">
@@ -29,14 +28,15 @@
                 {%endif%}
                 <div class="like-wrapper row">
                     <div class="col col-auto">
-                        <i id="pepe" class="fas fa-heart p-1 like" data-user="{{request.user.pk}}"
-                            data-post="{{post.pk}}" data-liked='{{post.liked}}'></i>
+                        <i class="fas fa-heart p-1 like" data-user="{{request.user.pk}}" data-post="{{post.pk}}"
+                            data-liked='{{post.liked}}'></i>
                     </div>
                     <div class="col like-count" data-post="{{post.pk}}">
-                        0 
+                        0
                     </div>
 
-                    
+
+
 
                 </div>
 

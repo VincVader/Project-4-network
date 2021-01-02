@@ -4,7 +4,58 @@ const likePost = document.querySelectorAll('like-post')
 const likeIcon = document.querySelectorAll('.like');
 const likes = document.querySelectorAll('.like-count');
 
-const pepe = document.getElementById('pepe');
+const followers = document.getElementById('followers')
+const following = document.getElementById('following')
+const follow = document.querySelector('.follow-btn');
+
+
+
+const pepega = async () => {
+    await fetch(`/follow/${followUser}`, {
+            method: "GET"
+        })
+        .then(response => response.json())
+        .then(data => {
+            follow.innerHTML = data.follow;
+            followers.innerHTML = `Followers: ${data.followers}`;
+            following.innerHTML = `Following: ${data.following}`;
+            console.log(data);
+        });
+};
+setTimeout(() => {
+    pepega();
+}, 100);
+
+
+let followUser = follow.dataset.user
+if (follow) {
+
+    follow.addEventListener('click', () => {
+        fetch(`/follow/${followUser}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log(result)
+                if (follow.classList.contains('followed')) {
+                    follow.classList.remove('followed');
+                    follow.innerHTML = 'Unfollow'
+                } else {
+                    follow.innerHTML = 'Follow'
+                    follow.classList.add('followed');
+                };
+            });
+        setTimeout(() => {
+            pepega();
+        }, 100);
+    });
+};
+
+
+
 
 
 
@@ -48,6 +99,9 @@ likeIcon.forEach((like, index) => {
 
             fetch('/liked', {
                     method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
                     body: JSON.stringify({
                         post: like.dataset.post,
                         user: like.dataset.user,
@@ -69,6 +123,9 @@ likeIcon.forEach((like, index) => {
 
             fetch('/liked', {
                     method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
                     body: JSON.stringify({
                         post: like.dataset.post,
                         user: like.dataset.user,
@@ -85,4 +142,4 @@ likeIcon.forEach((like, index) => {
 
         };
     });
-});
+})

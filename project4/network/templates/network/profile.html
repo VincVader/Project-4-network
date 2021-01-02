@@ -1,6 +1,7 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
+
 <div class="row m-3">
     <div class="row">
         <div class="col col-auto">
@@ -8,15 +9,19 @@
                 {{posts.0.author}}
 
             </h2>
-            {% if following %}
-            <button class="btn btn-primary">Follow</button>
-            {% else %}
-            <button class="btn btn-primary">Unfollow</button>
+            {% if posts.0.author == request.user %}
+            <p>Your profile page</p>
             {% endif %}
+            {%if request.user.is_authenticated %}
+            <button class="btn btn-primary follow-btn follow" data-user="{{posts.0.author.pk}}"></button>
+            {%else %}
+            <button class="btn btn-primary follow-btn follow" disabled data-user="{{posts.0.author.pk}}">To follow sign
+                in</button>
+            {%endif%}
         </div>
         <div class="col">
-            <p class="m-1">Followers: {{followers}}</p>
-            <p class="m-1">Following: {{following}}</p>
+            <p class="m-1" id="followers">Followers: {{followers}}</p>
+            <p class="m-1" id="following">Following: {{following}}</p>
         </div>
     </div>
 
@@ -30,7 +35,7 @@
             </div>
             <div class="col">
                 <p class=" mt-2 mb-0">
-                {{post.date_posted}}
+                    {{post.date_posted}}
                 </p>
             </div>
             <div class="w100">
@@ -38,19 +43,24 @@
             </div>
             <div class="col-12">
                 <p>{{post.content}}</p>
+
                 {%if post.author == request.user %}
                 <button class="btn btn-primary edit">Edit</button>
                 {%endif%}
                 <div class="like-wrapper row">
                     <div class="col col-auto">
-                        <i id="pepe" class="fas fa-heart p-1 like" data-user="{{request.user.pk}}"
-                            data-post="{{post.pk}}" data-liked='{{post.liked}}'></i>
+                        {%if request.user.is_authenticated %}
+                        <i class="fas fa-heart p-1 like" data-user="{{request.user.pk}}" data-post="{{post.pk}}"
+                            data-liked='{{post.liked}}'></i>
+                        {%else%}
+                        <i class="fas fa-heart p-1 like" disabled></i>
+                        {%endif%}
                     </div>
                     <div class="col like-count" data-post="{{post.pk}}">
-                        0 
+                        0
                     </div>
 
-                    
+
 
                 </div>
 

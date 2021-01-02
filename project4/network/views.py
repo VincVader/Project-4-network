@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import User, Post, Like
+from .models import User, Post, Like, Follow
 from .forms import NewPost
 
 
@@ -28,15 +28,19 @@ def index(request):
         
         
     return render(request, "network/index.html", {
-        'posts': posts,
-        "likes": likes,
+        'posts': posts,        
         
     })
 
 def profile(request, user_id):
-    posts = Post.objects.filter(author=user_id)
-    likes = 0
-    posts = posts.order_by("-date_posted").all()
+    posts = Post.objects.filter(author=user_id).order_by("-date_posted").all()
+    if request.user.is_authenticated:
+        try:
+            follow = Follow.objects.get(user=posts.first().author, following_user=request.user)
+        except Follow.DoesNotExist:
+            follow = None
+    else:
+        follow = None
     for post in posts:
         post.likes_count = len(Like.objects.filter(post=post.pk))
         if request.user.is_authenticated:
@@ -47,9 +51,41 @@ def profile(request, user_id):
                 post.liked = False
     return render(request, "network/profile.html", {
         "posts": posts,
-        "likes": likes,
+        "follow": follow      
 
     })
+
+
+@login_required
+def follow(request, user_id):
+    if request.method == "POST":        
+        
+        user = User.objects.get(id=user_id) 
+        if not request.user == user_id:
+            try:
+                f0 = Follow.objects.get(user=user, following_user=request.user)           
+                f0.delete()
+                return JsonResponse({"message":"Unfollowed"}, status=201)
+            except Follow.DoesNotExist:
+                f0 = Follow(user=user, following_user=request.user)
+                f0.save()
+                return JsonResponse({"message":"Followed"}, status=201)
+        else:
+            return JsonResponse({"message":"You can't follow yourself"}, status=201)
+
+    elif request.method == "GET":    
+        followers = len(Follow.objects.filter(user=user_id))
+        following = len(Follow.objects.filter(following_user=user_id))
+        try:
+            f0 = Follow.objects.get(user=user_id, following_user=request.user)
+            follow = 'Unfollow'
+        except Follow.DoesNotExist:
+            follow = 'Follow'
+    
+        return JsonResponse({"follow":follow,'following': following, 'followers': followers})
+     
+    return JsonResponse({"message":"OK"}, status=201)
+    
 
 @login_required
 def new_post(request):
@@ -71,7 +107,7 @@ def new_post(request):
         "form": form
     })
     
-@csrf_exempt
+
 @login_required
 def like(request):
     data = json.loads(request.body)
@@ -91,7 +127,7 @@ def like(request):
         return JsonResponse({"message": "Liked."}, status=201)   
     return JsonResponse({"message": "Email sent successfully."}, status=201)
     
-@csrf_exempt
+
 @login_required
 def likes(request, post_id):
     if request.method == "GET":        

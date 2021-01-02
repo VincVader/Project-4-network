@@ -12,6 +12,9 @@
     <link href="{% static 'network/styles.css' %}" rel="stylesheet">
     <title>{% block title %}Social Network{% endblock %}</title>
     <script src="https://kit.fontawesome.com/5f88fa27c0.js" crossorigin="anonymous"></script>
+    <script>
+        let csrftoken = '{{csrf_token}}'
+    </script>
 
 </head>
 
