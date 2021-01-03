@@ -61,7 +61,7 @@ def profile(request, user_id):
 
     return render(request, "network/profile.html", {
         "follow": follow,
-        'page_obj': page_obj,         
+        'page_obj': page_obj,        
 
     })
 
@@ -101,7 +101,6 @@ def follow(request, user_id):
 def following(request):
     user = User.objects.get(id=request.user.pk)
     follow = Follow.objects.filter(following_user=user)
-    print(follow)
     posts = []
     for items in follow:
         posts += Post.objects.filter(author=items.user)
@@ -128,7 +127,6 @@ def new_post(request):
             created_post.save()
             return HttpResponseRedirect(reverse('index'))
         else:
-            print('bruh')
             return render(request, 'network/new_post.html', {
                 "form": form
             })
@@ -137,14 +135,24 @@ def new_post(request):
         "form": form
     })
 
-    
+def edit_post(request, post_id):
+    post = Post.objects.get(id=post_id)
+    edit_form = NewPost(request.POST or None, instance=post)
+    if edit_form.is_valid():
+        edit_form.save()
+        return HttpResponseRedirect(reverse("index"))
+    else:        
+        return render(request, 'network/edit_post.html', {
+        "edit_form":edit_form,
+        "post_id": post_id
+    })
 
+    
 def like(request):
     data = json.loads(request.body)
     user = User.objects.get(id=data.get("user"))
     post = Post.objects.get(id=data.get("post"))
     liked = data.get("liked")
-    print(liked)
     if liked==True:        
         like = Like.objects.get(post=post, user=user)
         like.delete()    

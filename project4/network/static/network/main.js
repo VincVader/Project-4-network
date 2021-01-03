@@ -23,7 +23,6 @@ if (follow) {
                 follow.innerHTML = data.follow;
                 followers.innerHTML = `Followers: ${data.followers}`;
                 following.innerHTML = `Following: ${data.following}`;
-                console.log(data);
             });
     };
     setTimeout(() => {

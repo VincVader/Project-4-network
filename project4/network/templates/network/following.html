@@ -23,7 +23,7 @@
             <div class="col-12">
                 <p>{{post.content}}</p>
                 {%if post.author == request.user %}
-                <button class="btn btn-primary edit">Edit</button>
+                <a href="{% url 'edit_post' post_id=post.pk %}"><button class="btn btn-primary edit">Edit</button></a>
                 {%endif%}
                 <div class="like-wrapper row">
                     <div class="col col-auto">
@@ -35,7 +35,7 @@
                         0
                     </div>
                 </div>
-                <button class="btn btn-primary comment">Add comment</button>
+                
             </div>
         </div>
     </div>
