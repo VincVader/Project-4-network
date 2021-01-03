@@ -6,18 +6,19 @@
     <div class="row">
         <div class="col col-auto">
             <h2>
-                {{posts.0.author}}
-
+                {{page_obj.0.author}}
             </h2>
-            {% if posts.0.author == request.user %}
+            {% if page_obj.0.author == request.user %}
             <p>Your profile page</p>
-            {% endif %}
+            <button class="btn btn-primary follow-btn follow" style="display: none;" data-user="{{page_obj.0.author.pk}}"></button>
+            {%else%}
             {%if request.user.is_authenticated %}
-            <button class="btn btn-primary follow-btn follow" data-user="{{posts.0.author.pk}}"></button>
+            <button class="btn btn-primary follow-btn follow" data-user="{{page_obj.0.author.pk}}"></button>
             {%else %}
-            <button class="btn btn-primary follow-btn follow" disabled data-user="{{posts.0.author.pk}}">To follow sign
-                in</button>
+            <button class="btn btn-primary follow-btn follow" disabled data-user="{{page_obj.0.author.pk}}">
+            To follow sign in</button>
             {%endif%}
+            {% endif %}
         </div>
         <div class="col">
             <p class="m-1" id="followers">Followers: {{followers}}</p>
@@ -25,7 +26,7 @@
         </div>
     </div>
 
-    {%for post in posts%}
+    {%for post in page_obj%}
     <div class="col-12 m-3 border">
         <div class="row">
             <div class="col col-auto">
@@ -69,5 +70,54 @@
         </div>
     </div>
     {% endfor %}
+    <div class="col-12">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">&laquo; First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1"
+                        aria-disabled="true">Previous</a>
+                </li>
+                {%else%}
+                <li class="page-item disabled">
+                    <a class="page-link" aria-disabled="true" href="#">&laquo; First</a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link disabled" href="#" tabindex="-1"
+                        aria-disabled="true">Previous</a>
+                </li>
+
+                {%endif%}
+
+                {%for page in page_obj.paginator.page_range %}
+                {% if page_obj.number == page %}
+                <li class="page-item active"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+                {%endif%}
+                {%endfor%}
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                </li>
+                {%else%}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Last &raquo;</a>
+                </li>
+                {% endif %}
+
+            </ul>
+        </nav>
+    </div>
 </div>
 {% endblock %}

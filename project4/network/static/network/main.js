@@ -10,25 +10,25 @@ const follow = document.querySelector('.follow-btn');
 
 
 
-const pepega = async () => {
-    await fetch(`/follow/${followUser}`, {
-            method: "GET"
-        })
-        .then(response => response.json())
-        .then(data => {
-            follow.innerHTML = data.follow;
-            followers.innerHTML = `Followers: ${data.followers}`;
-            following.innerHTML = `Following: ${data.following}`;
-            console.log(data);
-        });
-};
-setTimeout(() => {
-    pepega();
-}, 100);
 
 
-let followUser = follow.dataset.user
 if (follow) {
+    let followUser = follow.dataset.user
+    const followCount = async () => {
+        await fetch(`/follow/${followUser}`, {
+                method: "GET"
+            })
+            .then(response => response.json())
+            .then(data => {
+                follow.innerHTML = data.follow;
+                followers.innerHTML = `Followers: ${data.followers}`;
+                following.innerHTML = `Following: ${data.following}`;
+                console.log(data);
+            });
+    };
+    setTimeout(() => {
+        followCount();
+    }, 100);
 
     follow.addEventListener('click', () => {
         fetch(`/follow/${followUser}`, {
@@ -49,16 +49,10 @@ if (follow) {
                 };
             });
         setTimeout(() => {
-            pepega();
+            followCount();
         }, 100);
     });
 };
-
-
-
-
-
-
 
 const likeCounter = async (likeData, item) => {
     await fetch(`/liked/${likeData}`, {
@@ -66,10 +60,7 @@ const likeCounter = async (likeData, item) => {
         })
         .then(response => response.json())
         .then(data => {
-
             item.innerHTML = data.data;
-
-
         });
 };
 
@@ -77,11 +68,7 @@ let items = [];
 likes.forEach(count => {
     items.push(count)
     likeCounter(count.dataset.post, count);
-
 });
-
-
-
 
 likeIcon.forEach((like, index) => {
     if (like.dataset.liked === 'True') {

@@ -7,6 +7,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from itertools import chain
+from django.core.paginator import Paginator
 
 from .models import User, Post, Like, Follow
 from .forms import NewPost
@@ -19,16 +21,19 @@ def index(request):
     posts = posts.order_by("-date_posted").all()
     for post in posts:
         post.likes_count = len(Like.objects.filter(post=post.pk))
-        if request.user.is_authenticated:
-            try:
+        try:
+            if request.user.is_authenticated:
                 Like.objects.get(post=post.pk, user=request.user)
                 post.liked = True
-            except Like.DoesNotExist:
-                post.liked = False
-        
-        
+        except Like.DoesNotExist:
+            post.liked = False
+
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
     return render(request, "network/index.html", {
-        'posts': posts,        
+        'page_obj': page_obj,        
         
     })
 
@@ -49,18 +54,21 @@ def profile(request, user_id):
                 post.liked = True
             except Like.DoesNotExist:
                 post.liked = False
+
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, "network/profile.html", {
-        "posts": posts,
-        "follow": follow      
+        "follow": follow,
+        'page_obj': page_obj,         
 
     })
 
 
-@login_required
 def follow(request, user_id):
-    if request.method == "POST":        
-        
-        user = User.objects.get(id=user_id) 
+    if request.method == "POST":   
+        user = User.objects.get(id=user_id)        
         if not request.user == user_id:
             try:
                 f0 = Follow.objects.get(user=user, following_user=request.user)           
@@ -76,16 +84,38 @@ def follow(request, user_id):
     elif request.method == "GET":    
         followers = len(Follow.objects.filter(user=user_id))
         following = len(Follow.objects.filter(following_user=user_id))
-        try:
-            f0 = Follow.objects.get(user=user_id, following_user=request.user)
-            follow = 'Unfollow'
-        except Follow.DoesNotExist:
-            follow = 'Follow'
+        if request.user.is_authenticated:
+            try:
+                f0 = Follow.objects.get(user=user_id, following_user=request.user)
+                follow = 'Unfollow'
+            except Follow.DoesNotExist:
+                follow = 'Follow'
+        else:
+            follow = 'Sign in to follow'
     
         return JsonResponse({"follow":follow,'following': following, 'followers': followers})
      
     return JsonResponse({"message":"OK"}, status=201)
     
+
+def following(request):
+    user = User.objects.get(id=request.user.pk)
+    follow = Follow.objects.filter(following_user=user)
+    print(follow)
+    posts = []
+    for items in follow:
+        posts += Post.objects.filter(author=items.user)
+        
+    posts.sort(key=lambda x: x.date_posted, reverse=True)
+    
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "network/following.html", {        
+        "follow": follow,
+        'page_obj': page_obj,   
+    })
 
 @login_required
 def new_post(request):
@@ -106,9 +136,9 @@ def new_post(request):
         return render(request, 'network/new_post.html', {
         "form": form
     })
+
     
 
-@login_required
 def like(request):
     data = json.loads(request.body)
     user = User.objects.get(id=data.get("user"))
@@ -128,11 +158,10 @@ def like(request):
     return JsonResponse({"message": "Email sent successfully."}, status=201)
     
 
-@login_required
+
 def likes(request, post_id):
     if request.method == "GET":        
         try:
-            user = User.objects.get(id=request.user.pk)
             post = Post.objects.get(id=post_id)
             likes = Like.objects.filter(post=post)
             data = len(likes)

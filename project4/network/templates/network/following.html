@@ -3,7 +3,7 @@
 {% block body %}
 
 <div class="row m-3">
-    {%for post in page_obj  %}
+    {%for post in page_obj%}
     <div class="col-12 m-3 border">
         <div class="row">
             <div class="col col-auto">
@@ -19,7 +19,6 @@
                 </p>
             </div>
             <div class="w100">
-
             </div>
             <div class="col-12">
                 <p>{{post.content}}</p>
@@ -35,19 +34,12 @@
                     <div class="col like-count" data-post="{{post.pk}}">
                         0
                     </div>
-
-
-
-
                 </div>
-
                 <button class="btn btn-primary comment">Add comment</button>
             </div>
         </div>
     </div>
-
     {% endfor %}
-
     <div class="col-12">
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
@@ -64,8 +56,7 @@
                     <a class="page-link" aria-disabled="true" href="#">&laquo; First</a>
                 </li>
                 <li class="page-item disabled">
-                    <a class="page-link disabled" href="#" tabindex="-1"
-                        aria-disabled="true">Previous</a>
+                    <a class="page-link disabled" href="#" tabindex="-1" aria-disabled="true">Previous</a>
                 </li>
 
                 {%endif%}
