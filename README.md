@@ -35,44 +35,51 @@ Also at any time **user** can click on _**All Posts**_ link in the navbar to be 
 
 ## 2. New Post:
 
-Users who are signed in can click on _**New Post**_ link in the navbar, write a new text-based post by filling in text into a text area and then clicking a button to submit the post.
-
+**Users** who are signed in can click on _**New Post**_ link in the navbar, write a new text-based post by filling in text into a text area and then clicking a button to submit the post.
 
 ![creating a new post](/readmedia/new-post.gif)
 
 ## 3. Profile Page:
 
-image description
+Clicking on a **username** will load that **user’s** profile page.
+That page displays:
 
-![alt text](/readmedia/default.png)
+- Number of followers the **user** has
+- Number of people that **user** follows
+- All post made by that **user** in reverse chronological order
+
+![alt text](/readmedia/profile-page.gif)
 
 ### 3.1 Follow/Unfollow:
 
-image description
+For any other **user** who is signed in, page also displays a _**Follow**_ or _**Unfollow**_ button that let the current **user** toggle whether or not they are following this **user’s** posts.
 
-![follow/unfollow user](/readmedia/default.png)
+![follow/unfollow user](/readmedia/follow.gif)
 
 ## 4. Following:
 
-image description
+User can click on the _**Following**_ link in the navbar, doing so **user** will be taken to a page where they see all posts made by **users** that the current **user** follows.
 
-![alt text](/readmedia/default.png)
+![following](/readmedia/following.gif)
 
 ## 5. Edit Post:
 
-image description
+Users can click an _**Edit**_ button on any of their own posts to edit that post.
 
-![alt text](/readmedia/default.png)
+![edit post](/readmedia/edit-post.png)
+
 ## 6. Pagination:
 
-image description
+On any page that displays posts can be only 10 of them.
+If there are more than 10 posts, a _**Next**_ button appear to take the user to the next page of posts (which should be older than the current page of posts). If not on the first page, a _**Previous**_ button appears to take the **user** to the previous page of posts as well.
 
-![alt text](/readmedia/default.png)
+![pagination](/readmedia/pagination.gif)
+
 ## 7. "Like" and "Unlike":
 
-image description
+Users who signed in is able to click a _**like button**_ on any post to toggle whether or not they “like” that post.
 
-![alt text](/readmedia/default.png)
+![liking posts](/readmedia/liking.gif)
 
 ## 8. Future improvements:
 

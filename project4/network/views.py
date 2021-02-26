@@ -138,6 +138,9 @@ def new_post(request):
 def edit_post(request, post_id):
     post = Post.objects.get(id=post_id)
     edit_form = NewPost(request.POST or None, instance=post)
+    if post.author != request.user:
+        return HttpResponseRedirect(reverse("index"))
+        
     if edit_form.is_valid():
         edit_form.save()
         return HttpResponseRedirect(reverse("index"))
