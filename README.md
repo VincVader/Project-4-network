@@ -66,7 +66,7 @@ User can click on the _**Following**_ link in the navbar, doing so **user** will
 
 Users can click an _**Edit**_ button on any of their own posts to edit that post.
 
-![edit post](/readmedia/edit-post.png)
+![edit post](/readmedia/edit-post.gif)
 
 ## 6. Pagination:
 
