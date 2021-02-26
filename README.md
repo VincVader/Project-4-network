@@ -86,6 +86,7 @@ Users who signed in is able to click a _**like button**_ on any post to toggle w
 1. Switch from bootstrap to css
 2. Improve ui
 3. Add reposts
+4. Make editing possible on the same page
 
 ## My contacts
 
