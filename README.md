@@ -27,17 +27,18 @@ Twitter-like social network website for _making_, _liking_ posts and _following_
 
 ## 1. All Posts:
 
-image description
+On the front page **user** can see all **posts** from all **users** with the most recent posts coming first.
 
-![alt text](/readmedia/default.png)
+Also at any time **user** can click on _**All Posts**_ link in the navbar to be taken to front page with all **posts**.
 
-![alt text](/readmedia/default.png)
+![front page](/readmedia/all-posts.png)
 
 ## 2. New Post:
 
-image description
+Users who are signed in can click on _**New Post**_ link in the navbar, write a new text-based post by filling in text into a text area and then clicking a button to submit the post.
 
-![alt text](/readmedia/default.png)
+
+![creating a new post](/readmedia/new-post.gif)
 
 ## 3. Profile Page:
 
